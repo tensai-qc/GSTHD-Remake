@@ -34,7 +34,6 @@ export const useLayoutStore = defineStore('layout', () => {
       const fileContent = await readTextFile(path, { baseDir: TARGET_DIR })
       layout.value = JSON.parse(fileContent)
       isLoaded.value = true
-      console.log(layout.value)
     } catch (err: any) {
       console.error('Layout load failure:', err)
       error.value = err.message || `An unknown error occurred while reading ${path}.`

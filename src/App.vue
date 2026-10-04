@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window'
 
 import { useConfigStore } from './stores/config'
 import { useLayoutStore } from './stores/layout'
@@ -12,8 +13,19 @@ const layoutStore = useLayoutStore()
 
 onMounted(async () => {
   await configStore.loadConfig()
-  console.log(configStore.config.ActiveLayout)
   await layoutStore.loadLayout(configStore.config.ActiveLayout)
+
+  try {
+    const appWindow = getCurrentWindow()
+    await appWindow.setSize(
+      new LogicalSize(
+        Number(layoutStore.layout.AppSize.Width),
+        Number(layoutStore.layout.AppSize.Height)
+      )
+    )
+  } catch (err) {
+    console.error('Failed to set window size:', err)
+  }
 })
 </script>
 
