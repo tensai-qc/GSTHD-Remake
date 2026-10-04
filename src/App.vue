@@ -1,30 +1,40 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+
 import { useConfigStore } from './stores/config'
+import { useLayoutStore } from './stores/layout'
+
+import ErrorCard from './components/ErrorCard.vue'
 import HelloWorld from './components/HelloWorld.vue'
 
-const configStore = ref()
+const configStore = useConfigStore()
+const layoutStore = useLayoutStore()
 
 onMounted(async () => {
-  const store = useConfigStore()
-  configStore.value = store
-  await store.loadConfig()
+  await configStore.loadConfig()
+  console.log(configStore.config.ActiveLayout)
+  await layoutStore.loadLayout(configStore.config.ActiveLayout)
 })
 </script>
 
 <template>
   <div v-if="configStore?.error" class="error-container">
-    <div class="error-card">
-      <div class="icon">⚠️</div>
-      <br />
-      <p>{{ configStore.error }}</p>
-      <p class="hint">Please ensure <code>settings.json</code> exists in your app folder and try again.</p>
-      <button @click="configStore.loadConfig()">Retry</button>
-    </div>
+    <ErrorCard :message="configStore.error">
+      <template #hint>
+        Please ensure <code>settings.json</code> exists in your app folder and try again.
+      </template>
+    </ErrorCard>
   </div>
-
-  <div v-else-if="!configStore?.isLoaded" class="loading-container">
-    <p>Loading settings...</p>
+  <div v-else-if="layoutStore?.error" class="error-container">
+    <ErrorCard :message="layoutStore.error">
+      <template #hint>
+        Please ensure <code>{{ configStore.config.ActiveLayout }}</code> exists in your app folder
+        and try again.
+      </template>
+    </ErrorCard>
+  </div>
+  <div v-else-if="!configStore?.isLoaded || !layoutStore?.isLoaded" class="loading-container">
+    <p>Loading...</p>
   </div>
 
   <div v-else :class="['app-layout', configStore.config.theme]">
@@ -33,7 +43,8 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.error-container, .loading-container {
+.error-container,
+.loading-container {
   display: flex;
   height: 100vh;
   justify-content: center;
@@ -50,7 +61,7 @@ onMounted(async () => {
   max-width: 450px;
   text-align: center;
   border: 1px solid #ff4d4f;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .icon {

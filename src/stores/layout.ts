@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { readTextFile, exists, BaseDirectory } from '@tauri-apps/plugin-fs'
 
-export interface AppConfig {
+export interface Layout {
   ActiveLayout: string
   DragButton: string
   AutocheckDragButton: string
@@ -14,32 +14,33 @@ export interface AppConfig {
   DefaultBarrenColors: [string]
 }
 
-export const useConfigStore = defineStore('config', () => {
-  const config = ref<AppConfig | null>(null)
+export const useLayoutStore = defineStore('layout', () => {
+  const layout = ref<Layout | null>(null)
   const isLoaded = ref(false)
   const error = ref<string | null>(null)
 
   const TARGET_DIR = BaseDirectory.Resource
 
-  async function loadConfig() {
+  async function loadLayout(path: string) {
     error.value = null
     isLoaded.value = false
 
     try {
-      const fileExists = await exists('settings.json', { baseDir: TARGET_DIR })
+      const fileExists = await exists(path, { baseDir: TARGET_DIR })
       if (!fileExists) {
-        throw new Error('Settings file not found.')
+        throw new Error(`Layout file not found.`)
       }
 
-      const fileContent = await readTextFile('settings.json', { baseDir: TARGET_DIR })
-      config.value = JSON.parse(fileContent)
+      const fileContent = await readTextFile(path, { baseDir: TARGET_DIR })
+      layout.value = JSON.parse(fileContent)
       isLoaded.value = true
+      console.log(layout.value)
     } catch (err: any) {
-      console.error('Config load failure:', err)
-      error.value = err.message || 'An unknown error occurred while reading settings.json.'
+      console.error('Layout load failure:', err)
+      error.value = err.message || `An unknown error occurred while reading ${path}.`
       isLoaded.value = false
     }
   }
 
-  return { config, isLoaded, error, loadConfig }
+  return { layout, isLoaded, error, loadLayout }
 })
