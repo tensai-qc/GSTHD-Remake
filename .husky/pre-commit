@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# 1. Get list of staged files that Prettier can format
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(js|ts|vue|json|css|md)$')
+
+# 2. If no matching files are staged, allow commit
+if [ -z "$STAGED_FILES" ]; then
+  exit 0
+fi
+
+# 3. Format the staged files in place
+npx prettier --write $STAGED_FILES
+
+# 4. Check if Prettier modified any files on disk
+if ! git diff --quiet $STAGED_FILES; then
+  echo ""
+  echo "⚠️ Prettier modified your staged files!"
+  echo "The commit was stopped so you can review the diffs."
+  echo "Review the changes, run 'git add .' when ready, and commit again."
+  echo ""
+  exit 1
+fi
