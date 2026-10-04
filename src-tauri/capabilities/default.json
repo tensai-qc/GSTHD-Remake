@@ -1,11 +1,25 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "enables the default permissions",
-  "windows": [
-    "main"
-  ],
+  "description": "Capability for local directory config",
+  "windows": ["main"],
   "permissions": [
-    "core:default"
+    "core:default",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
+    "fs:allow-exists",
+    "fs:scope-resource-recursive",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$RESOURCE/*" }, { "path": "./*" }]
+    },
+    {
+      "identifier": "fs:allow-read-text-file",
+      "allow": [{ "path": "$RESOURCE/*" }, { "path": "./*" }]
+    },
+    {
+      "identifier": "fs:allow-write-text-file",
+      "allow": [{ "path": "$RESOURCE/*" }, { "path": "./*" }]
+    }
   ]
 }

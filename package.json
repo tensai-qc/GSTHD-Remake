@@ -10,7 +10,10 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "vue": "^3.5.42"
+    "@tauri-apps/plugin-fs": "^2.6.0",
+    "pinia": "^4.0.3",
+    "vue": "^3.5.42",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.12.1",
