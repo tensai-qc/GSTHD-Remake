@@ -1,18 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { readTextFile, exists, BaseDirectory } from '@tauri-apps/plugin-fs'
-
-export interface Layout {
-  ActiveLayout: string
-  DragButton: string
-  AutocheckDragButton: string
-  DefaultGossipStoneImages: [string]
-  DefaultPathGoalImages: [string]
-  DefaultPathGoalCount: number
-  DefaultWothGossipStoneCount: number
-  DefaultWothColors: [string]
-  DefaultBarrenColors: [string]
-}
+import type { Layout } from '../utils/types'
 
 export const useLayoutStore = defineStore('layout', () => {
   const layout = ref<Layout | null>(null)

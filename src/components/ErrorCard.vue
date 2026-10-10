@@ -17,10 +17,9 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="error-card">
-    <div class="icon">{{ icon }}</div>
-    <br />
-    <p class="message">{{ message }}</p>
+  <error-card-container>
+    <error-card-icon>{{ icon }}</error-card-icon>
+    <error-card-message>{{ message }}</error-card-message>
 
     <p v-if="$slots.hint || hint" class="hint">
       <slot name="hint">
@@ -29,11 +28,11 @@ const emit = defineEmits<{
     </p>
 
     <button @click="emit('retry')">{{ buttonText }}</button>
-  </div>
+  </error-card-container>
 </template>
 
 <style scoped>
-.error-card {
+error-card-container {
   background: #2a2a2a;
   padding: 2.5rem;
   border-radius: 12px;
@@ -45,20 +44,18 @@ const emit = defineEmits<{
   font-family: system-ui, sans-serif;
 }
 
-.icon {
+error-card-icon {
+  display: flex;
+  justify-content: center;
   font-size: 3rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.25rem;
 }
 
-h3 {
-  margin: 0 0 0.5rem 0;
-  color: #ff4d4f;
-  font-size: 1.4rem;
-}
-
-.message {
+error-card-message {
+  display: flex;
+  justify-content: center;
   font-size: 1rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .hint {
